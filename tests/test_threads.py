@@ -24,7 +24,7 @@ class TestThreadInit:
     def test_thread_creates_with_valid_values(self):
         t = Thread("Тест", 100.0, 0.5)
         assert t.name == "Тест"
-        assert t.frequency == 999.0
+        assert t.frequency == 100.0
         assert t.stability == 0.5
 
     def test_thread_energy_computed_correctly(self):
