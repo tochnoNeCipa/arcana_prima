@@ -1,0 +1,46 @@
+name: Python CI — Кодекс Нитей
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Получаем код из репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Устанавливаем Python
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # 3. Устанавливаем зависимости
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Запускаем тесты с покрытием
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest tests/ -v
+          coverage report -m
+
+      # 5. Генерируем HTML-отчёт pytest
+      - name: Generate HTML report
+        run: |
+          pytest --html=report.html --self-contained-html
+
+      # 6. (Дополнительно) Проверка стиля кода через ruff
+      - name: Lint with ruff
+        run: |
+          pip install ruff
+          ruff check src/ --ignore E501
+        continue-on-error: true
